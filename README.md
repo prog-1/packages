@@ -25,7 +25,24 @@ import (
 )
 ```
 
+### Export/import names
+
+Symbols (e.g. global variable names, functions, contants, types, etc) that start with capital letters are available
+to be imported e.g. `fmt.Println` or `strings.Contains`. Other names are available from inside of the package only.
+
+### Import paths
+
+* Reference: https://go.dev/doc/go1.4#canonicalimports
+* Remote import paths: https://pkg.go.dev/cmd/go#hdr-Remote_import_paths
+
+Code often lives in repositories hosted by public services such as github.com, meaning that the import paths
+for packages begin with the name of the hosting service, github.com/rsc/pdf for example. One can use an existing
+mechanism to provide a "custom" or "vanity" import path such as rsc.io/pdf, but that creates two valid import paths
+for the package. 
+
 ## Special packages
+
+### Main
 
 The only special package is `main`. If package must contain `main` function, which is your application
 entry point. Example:
@@ -38,6 +55,24 @@ func main() { fmt.Println("Hello, world!") }
 
 There can be multiple applications in the same workspace, and each of them must be contained in a separate
 directory. In the same way we always handled our examples - each example in its own directory.
+
+### Internal
+
+* Reference: https://go.dev/doc/go1.4#internalpackages
+
+Go's package system makes it easy to structure programs into components with clean boundaries, but there
+are only two forms of access: local (unexported) and global (exported). Sometimes one wishes to have components
+that are not exported, for instance to avoid acquiring clients of interfaces to code that is part of a public
+repository but not intended for use outside the program to which it belongs.
+
+The Go language does not have the power to enforce this distinction, but as of Go 1.4 the go command introduces
+a mechanism to define "internal" packages that may not be imported by packages outside the source subtree in which they reside.
+
+To create such a package, place it in a directory named internal or in a subdirectory of a directory named internal.
+When the go command sees an import of a package with internal in its path, it verifies that the package doing the
+import is within the tree rooted at the parent of the internal directory. For example, a package .../a/b/c/internal/d/e/f
+can be imported only by code in the directory tree rooted at .../a/b/c. It cannot be imported by code in .../a/b/g or in
+any other repository.
 
 ## Modules
 
