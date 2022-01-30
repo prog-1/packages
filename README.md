@@ -100,3 +100,6 @@ The commands are:
 
 To add a remote dependency use `go get` command e.g. `go get github.com/yarcat/fsm-go` or
 `go get github.com/nsf/termbox-go`. Use `go help mod` for more information.
+
+Running `go mod tidy` peridically allows to keep the dependencies under control by removing unused deps, and
+hashing (remembering exact revision) used ones.
